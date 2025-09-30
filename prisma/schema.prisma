@@ -21,19 +21,41 @@ datasource db {
 //   userId Int     @unique
 // }
 
+model Expenses {
+  id            Int       @id @default(autoincrement())
+  fisher        User      @relation(fields: [userId], references: [id])
+  expense_name  String
+  expense_value Float
+  userId        Int
+  fishings      fishings? @relation(fields: [fishingsId], references: [id])
+  fishingsId    Int?
+}
+
+model fishings {
+  id        Int        @id @default(autoincrement())
+  datetime  DateTime
+  address   Address    @relation(fields: [addressId], references: [id])
+  addressId Int
+  fishers   User[]
+  expenses  Expenses[]
+}
+
 model Address {
-  id Int @id @default(autoincrement())
-  country String
-  state String
-  city String
-  location String
-  User User[]
+  id        Int        @id @default(autoincrement())
+  latitude  String
+  longitude String
+  User      User[]
+  fishings  fishings[]
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  full_name String
-  email String @unique()
-  phone Int
-  address Address[]
+  id         Int        @id @default(autoincrement())
+  full_name  String
+  email      String     @unique()
+  phone      Int
+  address    Address    @relation(fields: [addressId], references: [id])
+  addressId  Int
+  Expenses   Expenses[]
+  fishings   fishings?  @relation(fields: [fishingsId], references: [id])
+  fishingsId Int?
 }

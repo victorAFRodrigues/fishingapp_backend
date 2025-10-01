@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  // output   = "../generated/prisma"
 }
 
 datasource db {
@@ -14,48 +14,68 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// model Profile {
-//   id     Int     @id @default(autoincrement())
-//   bio    String?
-//   user   User    @relation(fields: [userId], references: [id])
-//   userId Int     @unique
-// }
-
-model Expenses {
-  id            Int       @id @default(autoincrement())
-  fisher        User      @relation(fields: [userId], references: [id])
-  expense_name  String
-  expense_value Float
-  userId        Int
-  fishings      fishings? @relation(fields: [fishingsId], references: [id])
-  fishingsId    Int?
-}
-
-model fishings {
-  id        Int        @id @default(autoincrement())
-  datetime  DateTime
-  address   Address    @relation(fields: [addressId], references: [id])
-  addressId Int
-  fishers   User[]
-  expenses  Expenses[]
-}
-
-model Address {
-  id        Int        @id @default(autoincrement())
-  latitude  String
-  longitude String
-  User      User[]
-  fishings  fishings[]
-}
-
 model User {
-  id         Int        @id @default(autoincrement())
-  full_name  String
-  email      String     @unique()
-  phone      Int
-  address    Address    @relation(fields: [addressId], references: [id])
-  addressId  Int
-  Expenses   Expenses[]
-  fishings   fishings?  @relation(fields: [fishingsId], references: [id])
-  fishingsId Int?
+  id        Int     @id @default(autoincrement())
+  firstName String
+  lastName  String
+  email     String  @unique
+  password  String
+  address   String?
+
+  // Relacionamentos
+  fishingTrips FishingTrip[] // Um usuário pode estar em várias pescarias
+}
+
+model FishingTrip {
+  id           Int        @id @default(autoincrement())
+  date         DateTime
+  address      String
+  totalExpense Float
+  status       TripStatus // pendente | finalizada | cancelada
+
+  // Relacionamentos
+  users        User[] // N:N -> vários usuários podem estar na mesma pescaria
+  guides       Guide[] // N:N -> uma pescaria pode ter vários guias/marinas
+  fishingSpots FishingSpot[] // N:N -> uma pescaria pode incluir vários pontos de pesca
+}
+
+model FishingSpot {
+  id          Int      @id @default(autoincrement())
+  name        String
+  rating      Int
+  description String   @db.VarChar(170)
+  type        SpotType // embarcado | pesca e pague | beira de rio
+
+  fishingTrips FishingTrip[]
+}
+
+model Guide {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String
+  rating      Int
+  address     String
+  type        GuideType // marina | guia de pesca | barqueiro
+  whatsapp    String?
+  phone       String?
+
+  fishingTrips FishingTrip[]
+}
+
+enum TripStatus {
+  PENDING
+  FINISHED
+  CANCELED
+}
+
+enum SpotType {
+  EMBARCADO
+  PESCA_E_PAGUE
+  BEIRA_RIO
+}
+
+enum GuideType {
+  MARINA
+  GUIA_DE_PESCA
+  BARQUEIRO
 }

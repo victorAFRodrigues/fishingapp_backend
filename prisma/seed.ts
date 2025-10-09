@@ -5,7 +5,7 @@ const prisma = new PrismaClient({});
 (async () => {
   console.log("🌱 Iniciando seed...");
 
-  // Addresses
+  // ===== Addresses =====
   const address1 = await prisma.address.create({
     data: {
       address: "Travessa Ibirarema, 12",
@@ -24,12 +24,12 @@ const prisma = new PrismaClient({});
     },
   });
 
-  // Tags
+  // ===== Tags =====
   const tagMarina = await prisma.tag.create({ data: { tagName: "Marina" } });
   const tagBarco = await prisma.tag.create({ data: { tagName: "Barcos" } });
   const tagPesca = await prisma.tag.create({ data: { tagName: "Guia de Pesca" } });
 
-  // Guides
+  // ===== Guides =====
   const guide1 = await prisma.guide.create({
     data: {
       name: "Marina Costa Azul",
@@ -54,7 +54,7 @@ const prisma = new PrismaClient({});
     },
   });
 
-  // FishingSpots
+  // ===== FishingSpots =====
   const spot1 = await prisma.fishingSpot.create({
     data: {
       name: "Represa Billings",
@@ -65,7 +65,7 @@ const prisma = new PrismaClient({});
     },
   });
 
-  // Users
+  // ===== Users =====
   const user1 = await prisma.user.create({
     data: {
       firstName: "Victor",
@@ -86,7 +86,33 @@ const prisma = new PrismaClient({});
     },
   });
 
-  // FishingTrips (N:N users)
+  const user3 = await prisma.user.create({
+    data: {
+      firstName: "Carlos",
+      lastName: "Pereira",
+      email: "carlos@example.com",
+      password: "123456",
+      addressId: address1.id,
+    },
+  });
+
+  // ===== FishingPartners ====
+  await prisma.fishingPartner.createMany({
+    data: [
+      {
+        userId: user1.id,
+        partnerId: user2.id,
+        status: "accepted",
+      },
+      {
+        userId: user1.id,
+        partnerId: user3.id,
+        status: "pending",
+      },
+    ],
+  });
+
+  // ===== FishingTrips (N:N users) =====
   const trip1 = await prisma.fishingTrip.create({
     data: {
       date: new Date(),
@@ -100,7 +126,7 @@ const prisma = new PrismaClient({});
     },
   });
 
-  // TripExpenses
+  // ===== TripExpenses =====
   await prisma.tripExpense.createMany({
     data: [
       {

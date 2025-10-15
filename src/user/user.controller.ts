@@ -7,8 +7,7 @@ import { PrismaService } from "../database/prisma.service";
 @Controller("user")
 export class UserController {
   constructor(
-    private readonly userService: UserService,
-    private readonly prismaService: PrismaService
+    private readonly userService: UserService
   ) {}
 
   @Post()

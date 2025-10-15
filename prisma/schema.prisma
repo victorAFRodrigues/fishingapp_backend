@@ -8,21 +8,22 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL_SQLITE")
 }
+
 // datasource db {
 //   provider = "postgres"
 //   url      = env("DATABASE_URL")
 // }
 
 model User {
-  id        Int    @id @default(autoincrement())
+  id        String @id @default(uuid())
   firstName String
   lastName  String
   email     String @unique
   password  String
 
   // Relacionamentos
-  address      Address?      @relation(fields: [addressId], references: [id])
-  addressId    Int?
+  address   Address? @relation(fields: [addressId], references: [id])
+  addressId Int?
 
   fishingTrips FishingTrip[] // N:N — um usuário pode participar de várias pescarias
   tripExpenses TripExpense[] // 1:N — um usuário pode ter várias despesas em pescarias
@@ -37,10 +38,10 @@ model TripExpense {
   category ExpenseCategory
 
   // Relacionamentos
-  user          User         @relation(fields: [userId], references: [id])
-  userId        Int
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
 
-  fishingTrip   FishingTrip  @relation(fields: [fishingTripId], references: [id])
+  fishingTrip   FishingTrip @relation(fields: [fishingTripId], references: [id])
   fishingTripId Int
 }
 
@@ -66,9 +67,9 @@ model Tag {
 }
 
 model FishingPartner {
-  id        Int @id @default(autoincrement())
-  userId    Int
-  partnerId Int
+  id        Int    @id @default(autoincrement())
+  userId    String
+  partnerId String
 
   status    String   @default("pending") // pending, accepted, blocked, etc.
   createdAt DateTime @default(now())

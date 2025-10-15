@@ -126,23 +126,26 @@ const prisma = new PrismaClient({});
     },
   });
 
-  // ===== TripExpenses =====
+  // ===== TripExpenses (agora vinculadas à pescaria) =====
   await prisma.tripExpense.createMany({
     data: [
       {
         value: 150.0,
         category: ExpenseCategory.VEICULO,
         userId: user1.id,
+        fishingTripId: trip1.id, // 🔗 vinculado à pescaria
       },
       {
         value: 250.0,
         category: ExpenseCategory.EMBARCACAO,
         userId: user2.id,
+        fishingTripId: trip1.id, // 🔗 vinculado à pescaria
       },
       {
         value: 75.0,
         category: ExpenseCategory.ISCAS,
         userId: user1.id,
+        fishingTripId: trip1.id, // 🔗 vinculado à pescaria
       },
     ],
   });

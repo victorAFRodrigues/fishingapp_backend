@@ -8,8 +8,10 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL_SQLITE")
 }
-
-// ===== MODELS =====
+// datasource db {
+//   provider = "postgres"
+//   url      = env("DATABASE_URL")
+// }
 
 model User {
   id        Int    @id @default(autoincrement())
@@ -21,8 +23,9 @@ model User {
   // Relacionamentos
   address      Address?      @relation(fields: [addressId], references: [id])
   addressId    Int?
-  fishingTrips FishingTrip[] // um usuário pode participar de várias pescarias
-  tripExpenses TripExpense[] // um usuário pode ter várias despesas de pescaria
+
+  fishingTrips FishingTrip[] // N:N — um usuário pode participar de várias pescarias
+  tripExpenses TripExpense[] // 1:N — um usuário pode ter várias despesas em pescarias
 
   fishingPartners   FishingPartner[] @relation("UserFishingPartners")
   fishingPartnersOf FishingPartner[] @relation("PartnerFishingPartners")
@@ -34,8 +37,11 @@ model TripExpense {
   category ExpenseCategory
 
   // Relacionamentos
-  user   User @relation(fields: [userId], references: [id])
-  userId Int
+  user          User         @relation(fields: [userId], references: [id])
+  userId        Int
+
+  fishingTrip   FishingTrip  @relation(fields: [fishingTripId], references: [id])
+  fishingTripId Int
 }
 
 model Address {
@@ -47,7 +53,7 @@ model Address {
 
   // Relacionamentos
   users       User[] // vários usuários podem compartilhar um endereço
-  fishingSpot FishingSpot? // 1:1 um endereço pode estar vinculado a um ponto de pesca
+  fishingSpot FishingSpot? // 1:1 — um endereço pode estar vinculado a um ponto de pesca
   guides      Guide[] // vários guias podem ter o mesmo endereço (ex: mesma marina)
 }
 
@@ -112,13 +118,15 @@ model FishingTrip {
   status       TripStatus // PENDING | FINISHED | CANCELED
 
   // Relacionamentos
-  users User[] // N:N -> vários usuários podem participar da mesma pescaria
+  users User[] // N:N — vários usuários podem participar da mesma pescaria
 
   guide   Guide @relation(fields: [guideId], references: [id])
   guideId Int
 
   fishingSpot   FishingSpot @relation(fields: [fishingSpotId], references: [id])
   fishingSpotId Int
+
+  tripExpenses TripExpense[] // 1:N — várias despesas podem ocorrer na mesma pescaria
 }
 
 // ===== ENUMS =====

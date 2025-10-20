@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE "User" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "firstName" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
     "email" TEXT NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE "TripExpense" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "value" REAL NOT NULL,
     "category" TEXT NOT NULL,
-    "userId" INTEGER NOT NULL,
+    "userId" TEXT NOT NULL,
     "fishingTripId" INTEGER NOT NULL,
     CONSTRAINT "TripExpense_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "TripExpense_fishingTripId_fkey" FOREIGN KEY ("fishingTripId") REFERENCES "FishingTrip" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
@@ -38,8 +38,8 @@ CREATE TABLE "Tag" (
 -- CreateTable
 CREATE TABLE "FishingPartner" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "userId" INTEGER NOT NULL,
-    "partnerId" INTEGER NOT NULL,
+    "userId" TEXT NOT NULL,
+    "partnerId" TEXT NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'pending',
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "FishingPartner_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
@@ -93,7 +93,7 @@ CREATE TABLE "_GuideToTag" (
 -- CreateTable
 CREATE TABLE "_FishingTripToUser" (
     "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL,
+    "B" TEXT NOT NULL,
     CONSTRAINT "_FishingTripToUser_A_fkey" FOREIGN KEY ("A") REFERENCES "FishingTrip" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "_FishingTripToUser_B_fkey" FOREIGN KEY ("B") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );

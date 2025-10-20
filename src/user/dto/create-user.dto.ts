@@ -1,4 +1,6 @@
-import { IsString } from "class-validator";
+import { IsOptional, IsString } from "class-validator";
+import { Expose, Type } from "class-transformer";
+import { AddressDto } from "./address.dto";
 
 export class CreateUserDto {
   @IsString()
@@ -12,4 +14,7 @@ export class CreateUserDto {
 
   @IsString()
   password: string;
+
+  @IsOptional()
+  address?: AddressDto;
 }

@@ -8,23 +8,23 @@ import { Prisma } from "@prisma/client";
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(data: Prisma.UserCreateInput) {
+  async create(data: CreateUserDto) {
     return this.prisma.user.create({ data });
   }
 
   async findAll() {
-    return `This action returns all user`;
+    return this.prisma.user.findMany();
   }
 
-  async findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) {
+    return this.prisma.user.findUnique({where: {id}});
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    return this.prisma.user.update({where: {id}, data:{...updateUserDto}});
   }
 
-  async remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    return this.prisma.user.delete({ where: {id} });
   }
 }

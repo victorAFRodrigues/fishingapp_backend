@@ -2,7 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from "@nestjs/commo
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
-import { PrismaService } from "../utils/prisma.service";
+import { PrismaService } from "../utils/prisma/prisma.service";
+import { FindUserDto } from "./dto/find-user.dto";
 
 @Controller("user")
 export class UserController {
@@ -20,9 +21,9 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.userService.findOne(id);
+  @Post("find")
+  findOne(@Body() raw: FindUserDto) {
+    return this.userService.findOne(raw.identifier);
   }
 
   @Patch(":id")

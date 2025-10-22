@@ -1,5 +1,4 @@
 import { IsOptional, IsString } from "class-validator";
-import { Expose, Type } from "class-transformer";
 import { AddressDto } from "./address.dto";
 
 export class CreateUserDto {

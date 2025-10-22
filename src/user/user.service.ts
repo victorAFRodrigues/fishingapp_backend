@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
-import { PrismaService } from "../utils/prisma.service";
+import { PrismaService } from "../utils/prisma/prisma.service";
 import * as bcrypt from "bcrypt";
 
 @Injectable()
@@ -56,15 +56,18 @@ export class UserService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(identifier: string) {
+    const where = identifier.includes('@')
+      ? { email: identifier }
+      : { id: identifier };
+
     return this.prisma.user.findUnique({
-      where: { id },
+      where,
       select: {
         id: true,
         firstName: true,
         lastName: true,
         email: true,
-        password: true,
         address: {
           select: {
             address: true,

@@ -1,9 +1,20 @@
-import { Controller, Get, Post, Body, Patch, Delete, HttpCode, HttpStatus } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Delete,
+  HttpCode,
+  HttpStatus,
+  UseGuards,
+} from "@nestjs/common";
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { PrismaService } from "../utils/prisma/prisma.service";
 import { FindUserDto } from "./dto/find-user.dto";
+import { AuthGuard } from "../auth/auth.guard";
 
 @Controller("user")
 export class UserController {
@@ -15,6 +26,7 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
+  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   @Get()
   findAll() {

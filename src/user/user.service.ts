@@ -68,6 +68,7 @@ export class UserService {
         firstName: true,
         lastName: true,
         email: true,
+        password: true,
         address: {
           select: {
             address: true,
@@ -83,11 +84,15 @@ export class UserService {
   async update(updateUserDto: UpdateUserDto) {
     const { address, id, ...userData } = updateUserDto;
 
+    if(userData.password){
+      userData.password = await bcrypt.hash(userData.password, 10);
+    }
+
     return this.prisma.user.update({
       where: { id },
       data: {
         ...userData,
-        address: address ? { update: address } : undefined, // atualiza nested address
+        address: address ? { update: address } : undefined,
       },
       select: {
         id: true,
@@ -108,6 +113,6 @@ export class UserService {
   }
 
   async remove(id: string) {
-    return this.prisma.user.delete({ where: { id } });
+    this.prisma.user.delete({ where: { id } });
   }
 }

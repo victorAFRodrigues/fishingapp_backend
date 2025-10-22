@@ -12,9 +12,9 @@ import {
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
-import { PrismaService } from "../utils/prisma/prisma.service";
 import { FindUserDto } from "./dto/find-user.dto";
 import { AuthGuard } from "../auth/auth.guard";
+
 
 @Controller("user")
 export class UserController {
@@ -33,18 +33,21 @@ export class UserController {
     return this.userService.findAll();
   }
 
+  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   @Post("find")
   findOne(@Body() body: FindUserDto) {
     return this.userService.findOne(body.identifier);
   }
 
+  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   @Patch()
   update(@Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(updateUserDto);
   }
 
+  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete()
   remove(@Body() body: { id: string }) {

@@ -80,8 +80,8 @@ export class UserService {
     });
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
-    const { address, ...userData } = updateUserDto;
+  async update(updateUserDto: UpdateUserDto) {
+    const { address, id, ...userData } = updateUserDto;
 
     return this.prisma.user.update({
       where: { id },

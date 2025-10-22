@@ -2,12 +2,14 @@ import { Injectable, NotFoundException, UnauthorizedException} from "@nestjs/com
 import { SignInDto } from "./dto/signin.dto";
 import { UserService } from "../user/user.service";
 import * as bcrypt from "bcrypt";
+import { JwtService } from "@nestjs/jwt";
 
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
+    private readonly jwtService: JwtService,
   ) {}
 
 
@@ -24,6 +26,10 @@ export class AuthService {
       throw new UnauthorizedException('Email or password incorrect, please try again...');
     }
 
-    return `Sign in successful with ${email}. \n UserData: ${JSON.stringify(user)}`;
+    const payload = { sub: user.id }
+
+    return {
+      access_token: await this.jwtService.signAsync(payload),
+    };
   }
 }

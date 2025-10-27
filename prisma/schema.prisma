@@ -125,7 +125,6 @@ model FishingTrip {
 }
 
 // ===== ENUMS =====
-
 enum TripStatus {
   PENDING
   FINISHED

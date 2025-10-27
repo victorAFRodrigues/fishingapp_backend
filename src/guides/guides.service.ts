@@ -24,6 +24,6 @@ export class GuidesService {
   }
 
   remove(id: number) {
-    this.prisma.guide.delete({ where: { id } });
+    this.prisma.guide.delete({ where: { id } }); // ação de remover
   }
 }

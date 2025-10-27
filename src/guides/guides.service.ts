@@ -5,8 +5,7 @@ import { PrismaService } from "../utils/prisma/prisma.service";
 
 @Injectable()
 export class GuidesService {
-  constructor(private readonly prisma: PrismaService) {
-  }
+  constructor(private readonly prisma: PrismaService,) {}
 
   create(createGuideDto: CreateGuideDto) {
     return 'This action adds a new guides';

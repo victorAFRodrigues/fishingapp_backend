@@ -1,15 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { CreateGuideDto } from './dto/create-guide.dto';
 import { UpdateGuideDto } from './dto/update-guide.dto';
+import { PrismaService } from "../utils/prisma/prisma.service";
 
 @Injectable()
 export class GuidesService {
+  constructor(private readonly prisma: PrismaService) {
+  }
+
   create(createGuideDto: CreateGuideDto) {
     return 'This action adds a new guide';
   }
 
   findAll() {
-    return `This action returns all guides`;
+    return this.prisma.guide.findMany();
   }
 
   findOne(id: number) {

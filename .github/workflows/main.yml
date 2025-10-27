@@ -1,0 +1,56 @@
+name: CI/CD - Build, Test and Auto Merge
+
+on:
+  push:
+    branches:
+      - develop  # roda sempre que algo for enviado pra develop
+
+permissions:
+  contents: write  # necessário para fazer merge automático
+
+jobs:
+  build-test-merge:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🧭 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # necessário para permitir o merge depois
+
+      - name: 🧱 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: ⚡ Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: 📦 Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: 📥 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🏗️ Build application
+        run: pnpm build
+
+      - name: 🧪 Run tests
+        run: pnpm test -- --passWithNoTests
+
+      - name: 🚀 Merge develop → main (if build & tests succeed)
+        if: success()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout main
+          git pull origin main
+          git merge --no-ff develop -m "Automated merge from CI pipeline"
+          git push origin main

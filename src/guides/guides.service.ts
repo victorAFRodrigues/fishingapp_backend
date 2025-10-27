@@ -5,11 +5,10 @@ import { PrismaService } from "../utils/prisma/prisma.service";
 
 @Injectable()
 export class GuidesService {
-  constructor(private readonly prisma: PrismaService) {
-  }
+  constructor(private readonly prisma: PrismaService,) {}
 
   create(createGuideDto: CreateGuideDto) {
-    return 'This action adds a new guide';
+    return 'This action adds a new guides';
   }
 
   findAll() {
@@ -17,14 +16,14 @@ export class GuidesService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} guide`;
+    return this.prisma.guide.findUnique({ where: { id } });
   }
 
   update(id: number, updateGuideDto: UpdateGuideDto) {
-    return `This action updates a #${id} guide`;
+    return this.prisma.guide.update({ where: { id }, data: updateGuideDto });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} guide`;
+    this.prisma.guide.delete({ where: { id } }); // ação de remover
   }
 }

@@ -1,9 +1,16 @@
 import { PrismaClient, GuideType, SpotType, TripStatus, ExpenseCategory } from "@prisma/client";
+import * as bcrypt from "bcrypt";
 
 const prisma = new PrismaClient({});
 
+async function encrypt(password: string): Promise<string> {
+  return await bcrypt.hash(password, 10);
+}
+
 (async () => {
   console.log("🌱 Iniciando seed...");
+
+  const TPass: string = await encrypt('123456')
 
   // ===== Addresses =====
   const address1 = await prisma.address.create({
@@ -71,7 +78,7 @@ const prisma = new PrismaClient({});
       firstName: "Victor",
       lastName: "Rodrigues",
       email: "victor@example.com",
-      password: "123456",
+      password: TPass,
       addressId: address1.id,
     },
   });
@@ -81,7 +88,7 @@ const prisma = new PrismaClient({});
       firstName: "Ana",
       lastName: "Souza",
       email: "ana@example.com",
-      password: "123456",
+      password: TPass,
       addressId: address2.id,
     },
   });
@@ -91,7 +98,7 @@ const prisma = new PrismaClient({});
       firstName: "Carlos",
       lastName: "Pereira",
       email: "carlos@example.com",
-      password: "123456",
+      password: TPass,
       addressId: address1.id,
     },
   });

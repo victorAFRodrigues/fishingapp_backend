@@ -20,10 +20,10 @@ export class GuidesService {
   }
 
   update(id: number, updateGuideDto: UpdateGuideDto) {
-    return `This action updates a #${id} guide`;
+    return this.prisma.guide.update({ where: { id }, data: updateGuideDto });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} guide`;
+    this.prisma.guide.delete({ where: { id } });
   }
 }

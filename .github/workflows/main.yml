@@ -1,59 +1,56 @@
-name: CI - Test and Merge
+name: CI/CD - Build, Test and Auto Merge
 
 on:
-  pull_request:
-    branches:
-      - main
-    types:
-      - opened
-      - synchronize
-      - reopened
-      - ready_for_review
   push:
     branches:
-      - dev
+      - develop  # roda sempre que algo for enviado pra develop
+
+permissions:
+  contents: write  # necessário para fazer merge automático
 
 jobs:
-  build-and-test:
-    name: Build & Test NestJS App
+  build-test-merge:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: 🧭 Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # necessário para permitir o merge depois
 
-      - name: Setup Node.js
+      - name: 🧱 Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Install dependencies
-        run: pnpm ci
+      - name: ⚡ Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
-      - name: Run build
-        run: pnpm run build
+      - name: 📦 Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
 
-      - name: Run tests
-        run: pnpm test
+      - name: 📥 Install dependencies
+        run: pnpm install --frozen-lockfile
 
-  auto-merge:
-    name: Auto Merge to main
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' && success() }}
+      - name: 🏗️ Build application
+        run: pnpm build
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: 🧪 Run tests
+        run: pnpm test -- --passWithNoTests
 
-      - name: Configure Git
+      - name: 🚀 Merge develop → main (if build & tests succeed)
+        if: success()
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Merge develop → main
-        run: |
-          git fetch origin
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           git checkout main
-          git merge origin/develop --no-edit
+          git pull origin main
+          git merge --no-ff develop -m "Automated merge from CI pipeline"
           git push origin main

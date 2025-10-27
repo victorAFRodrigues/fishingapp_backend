@@ -3,7 +3,7 @@ name: CI/CD - Build, Test and Auto Merge
 on:
   push:
     branches:
-      - develop  # roda sempre que algo for enviado pra develop
+      - dev  # roda sempre que algo for enviado pra dev
 
 permissions:
   contents: write  # necessário para fazer merge automático
@@ -45,12 +45,12 @@ jobs:
       - name: 🧪 Run tests
         run: pnpm test -- --passWithNoTests
 
-      - name: 🚀 Merge develop → main (if build & tests succeed)
+      - name: 🚀 Merge dev → main (if build & tests succeed)
         if: success()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git checkout main
           git pull origin main
-          git merge --no-ff develop -m "Automated merge from CI pipeline"
+          git merge --no-ff dev -m "Automated merge from CI pipeline"
           git push origin main

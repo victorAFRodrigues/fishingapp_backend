@@ -17,7 +17,7 @@ export class GuidesService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} guide`;
+    return this.prisma.guide.findUnique({ where: { id } });
   }
 
   update(id: number, updateGuideDto: UpdateGuideDto) {

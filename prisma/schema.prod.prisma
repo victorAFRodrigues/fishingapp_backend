@@ -1,18 +1,12 @@
 generator client {
   provider = "prisma-client-js"
-  // output   = "../generated/prisma"
 }
 
 // Datasource
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL_SQLITE")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
-
-// datasource db {
-//   provider = "postgres"
-//   url      = env("DATABASE_URL")
-// }
 
 model User {
   id        String @id @default(uuid())

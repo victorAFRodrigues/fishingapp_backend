@@ -1,0 +1,1 @@
+prisma studio --schema=./prisma/schema.prod.prisma (roda o prisma studio com o schema de produção)

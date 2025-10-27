@@ -9,7 +9,7 @@ export class GuidesService {
   }
 
   create(createGuideDto: CreateGuideDto) {
-    return 'This action adds a new guide';
+    return 'This action adds a new guides';
   }
 
   findAll() {

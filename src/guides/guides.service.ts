@@ -8,7 +8,13 @@ export class GuidesService {
   constructor(private readonly prisma: PrismaService,) {}
 
   create(createGuideDto: CreateGuideDto) {
-    return 'This action adds a new guides';
+    const { address, ...newGuide } = createGuideDto;
+    return this.prisma.guide.create({
+      data: {
+        ...newGuide,
+        ...(address && { address: { create: { ...address } } }),
+      }
+    });
   }
 
   findAll() {
@@ -20,7 +26,10 @@ export class GuidesService {
   }
 
   update(id: number, updateGuideDto: UpdateGuideDto) {
-    return this.prisma.guide.update({ where: { id }, data: updateGuideDto });
+    return this.prisma.guide.update({
+      where: { id },
+      data: { ...updateGuideDto },
+    });
   }
 
   remove(id: number) {

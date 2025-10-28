@@ -1,5 +1,5 @@
 import { IsOptional, IsString } from "class-validator";
-import { AddressDto } from "./address.dto";
+import { AddressDto } from "../../utils/dtos/address.dto";
 
 export class CreateUserDto {
   @IsString()

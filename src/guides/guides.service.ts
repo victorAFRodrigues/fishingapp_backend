@@ -12,7 +12,7 @@ export class GuidesService {
     return this.prisma.guide.create({
       data: {
         ...newGuide,
-        ...(address && { address: { create: { ...address } } }),
+        ...(address && { address: { create: { ...address } } })
       }
     });
   }
